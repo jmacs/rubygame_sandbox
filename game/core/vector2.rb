@@ -405,8 +405,13 @@ module Game::Core
       @components
     end
     
-    def copy(other)
+    def copy
       Vector2.copy self
+    end
+    
+    def clone(other)
+      self.x = other.x
+      self.y = other.y
     end
     
   end

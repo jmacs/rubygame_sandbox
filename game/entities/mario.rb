@@ -37,7 +37,7 @@ module Game::Entities
       @debug5 = Game::Core::Font.new "pirulen", 10
       @debug6 = Game::Core::Font.new "pirulen", 10
       
-      #@hitbox.make_visible
+      @hitbox.make_visible
       
       @input = Game::Core::PlayerInput
       

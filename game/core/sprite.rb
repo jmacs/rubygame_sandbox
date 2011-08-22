@@ -29,7 +29,7 @@ module Game::Core
     def adjust
       super
       @animation.animate
-      @hitbox.update @spos.to_a
+      @hitbox.update @spos
     end
     
     def draw
@@ -40,7 +40,7 @@ module Game::Core
 
     def change_animation(name)
       @animation.change name
-      @hitbox.change_size @animation.current.frame_hitbox
+      @hitbox.change @animation.hitbox
     end
     
     def set_animation_speed(speed)

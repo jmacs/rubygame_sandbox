@@ -55,7 +55,7 @@ def_actor mario:
 		hitbox:
 		{
 			default: {size: [64,128], offset: [0,0]},
-			duck: {size: [64,64], offset: [0,50]},
+			duck: {size: [64,80], offset: [0,25]},
 		}
     
   	}

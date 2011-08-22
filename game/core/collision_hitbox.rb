@@ -1,3 +1,4 @@
+require "game/core/vector2"
 
 module Game::Core
   
@@ -5,65 +6,80 @@ module Game::Core
   
     attr_reader :colliding_with
     attr_reader :collidable
-    attr_reader :rect
-    attr_reader :regions
-    attr_reader :sizes
-    attr_reader :current_size
+    attr_reader :hitboxes
+    attr_reader :current
     
     def initialize
-      @rect = Rubygame::Rect.new(0,0, 0, 0)
       @colliding_with = []
       @collidable = true
-      @regions = Hash.new
-      @region_collisions = []
+    end
+    
+    def name
+      @current[0]
+    end
+    
+    def rect
+      @current[1]
+    end
+    
+    def offset
+      @current[2]
+    end
+    
+    def image
+      @current[3]
     end
     
     def load(script)
-      @sizes = script[:sprite][:hitbox]
-      change_size @sizes.keys[0]
+      @hitboxes = Hash.new
+      script[:sprite][:hitbox].each do |key,hitbox|
+        r = Rubygame::Rect.new 0,0, hitbox[:size][0], hitbox[:size][1]
+        o = Vector2.new hitbox[:offset][0], hitbox[:offset][1]
+        @hitboxes[key] = [key,r,o,nil]
+      end
+      @current = @hitboxes[@hitboxes.keys[0]]
     end
     
-    def change_size(key)
-      return if key.to_s == @current_size 
-      @rect.w = @sizes[key][:size][0]
-      @rect.h = @sizes[key][:size][1]
-      @current_size = key.to_s
-      #make_visible
+    def change(key)
+      return if name == key
+      @current = @hitboxes[key]
     end
     
     def w
-      @rect.w
+      rect.w
     end
     
     def h
-      @rect.h
+      rect.h
     end
     
     def top
-      @rect.top
+      rect.top
     end
     
     def bottom
-      @rect.bottom
+      rect.bottom
     end
     
     def right
-      @rect.right
+      rect.right
     end
       
     def left
-      @rect.left  
+      rect.left  
     end
     
     def make_visible
-      @image = Rubygame::Surface.new([@rect.w, @rect.h])
-      @image.set_alpha 100
-      @image.fill([100, 100, 100])
+      @hitboxes.each do |key,box|
+        img = Rubygame::Surface.new([box[1].w, box[1].h])
+        img.set_alpha 100
+        img.fill([100, 100, 100])
+        box[3] = img
+      end
     end
     
     def clear_colliding_objects
       @colliding_with.clear
-      @region_collisions.clear
     end
     
     def collide_with(object)
@@ -81,12 +97,12 @@ module Game::Core
     end
     
     def collidable?
-      return false if @rect.nil?
+      return false if @current.nil?
       @collidable
     end
     
     def collision_detected?(hitbox)
-      colliding = @rect.collide_rect? hitbox.rect
+      colliding = rect.collide_rect? hitbox.rect
       color_rect colliding
       return colliding
     end
@@ -94,9 +110,9 @@ module Game::Core
     def color_rect(colliding)
       if visible? then
         if colliding then
-          @image.fill([178,34,34])
+          image.fill([178,34,34])
         else
-          @image.fill([100, 100, 100])
+          image.fill([100, 100, 100])
         end
       end
     end
@@ -110,42 +126,17 @@ module Game::Core
     end
     
     def update(pos)
-      @rect.center = pos
+      c = pos + offset
+      rect.center = c.to_a
     end
     
     def blit(surface, pos)
       return if not visible?
-      @image.blit surface, pos #[@rect.x,@rect.y]
+      image.blit surface, rect
     end
     
     def visible?
-      @image.nil? == false
-    end
-    
-    def add_regions(regions)
-      regions.each { |name,point| add_region name, point }  
-    end
-    
-    def add_region(name, point)
-      @regions[name] = point
-    end
-    
-    def colliding_regions
-      #get a list of all regions that are colliding, 
-      #including who is colliding with the region
-      if @region_collisions.size == 0
-        @colliding_with.each do |obj|
-          @regions.each do |name,r|
-            x = r[0] + @rect.x
-            y = r[1] + @rect.y
-            if obj.hitbox.rect.collide_point? x, y then
-              @region_collisions << [name, obj]
-            end
-          end
-        end
-      end
-      #only do this once per frame
-      return @region_collisions 
+      image.nil? == false
     end
     
   end

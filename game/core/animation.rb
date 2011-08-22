@@ -50,6 +50,10 @@ module Game::Core
       @rect.h
     end
     
+    def hitbox
+      @current.frame_hitbox
+    end
+    
     private
     
     def create_frame_sets(animations)
