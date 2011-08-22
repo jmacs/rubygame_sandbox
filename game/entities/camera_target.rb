@@ -24,7 +24,6 @@ module Game::Entities
     def draw
       super
       cblit @image
-      puts spos
       blit @debugtxt, spos.to_a, [5,-5]
     end
 

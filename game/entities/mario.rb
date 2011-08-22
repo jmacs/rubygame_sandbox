@@ -43,10 +43,9 @@ module Game::Entities
       
       @acc = Game::Core::Vector2.zero
       @vel = Game::Core::Vector2.zero
-      @pos = Game::Core::Vector2.new pos[0], pos[1]
       
       @airtime = 0.0
-      @facing = 1
+      @facing = :right
       @ducking = false
       @sliding = false
       
@@ -154,10 +153,10 @@ module Game::Entities
       #move left and right
       if @input.press? KEY_RIGHT and not @ducking
         @acc.x = accel_rate
-        @facing = 1 if not moving_vert?
+        @facing = :right if not moving_vert?
       elsif @input.press? KEY_LEFT and not @ducking
         @acc.x = -accel_rate
-        @facing = 2 if not moving_vert?
+        @facing = :left if not moving_vert?
       else
         @acc.x = ZERO
       end
@@ -227,45 +226,39 @@ module Game::Entities
     
       if moving_vert?
         
-        if @facing == 1
+        if @facing == :right
           change_animation :jump_right
-        elsif @facing == 2
+        else
           change_animation :jump_left
         end
       
       elsif @sliding
         
-        if @facing == 1
+        if @facing == :right
           change_animation :slide_right
-        elsif @facing == 2
-          change_animation :slide_left
         else
-          change_animation :slide_right
+          change_animation :slide_left
         end
       
       elsif moving_hort? and not @ducking
         
-        if @facing == 1
+        if @facing == :right
           change_animation :walk_right
-        elsif @facing == 2
-          change_animation :walk_left
         else
-          change_animation :walk_right
+          change_animation :walk_left
         end
       
       elsif @ducking and not moving_vert?
         
-        if @facing == 1
+        if @facing == :right
           change_animation :duck_right
-        elsif @facing == 2
-          change_animation :duck_left
         else
-          change_animation :duck_right
+          change_animation :duck_left
         end
         
       else
         
-        if @facing == 1
+        if @facing == :right
           change_animation :stand_right
         else
           change_animation :stand_left
@@ -273,7 +266,7 @@ module Game::Entities
           
       end
       
-      @animation_speed = (@vel.length / 5)
+      set_animation_speed @vel.length / 5
     end
 
     
