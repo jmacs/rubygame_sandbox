@@ -4,55 +4,57 @@ def_actor hero:
 	{
 		sheet: "hero",
 		
-		size: [48,72],
-		
-		animations:
+		animation:
 		{
 			stand_up: 
 			{ 
-				frames: ["walk.up.1"], 
-				hitbox: :default, 
+				"walk.up.1" => {}, 
 			},
 			stand_left: 
 			{ 
-				frames: ["walk.left.1"], 
-				hitbox: :default, 
+				"walk.left.1" => {},
 			},
 			stand_right: 
 			{ 
-				frames: ["walk.right.1"], 
-				hitbox: :default, 
+				"walk.right.1" => {}, 
 			},
 			stand_down: 
 			{ 
-				frames: ["walk.down.1"], 
-				hitbox: :default, 
+				"walk.down.1" => {},
 			},
 			walk_up: 
 			{ 
-				frames: ["walk.up.1","walk.up.2","walk.up.3","walk.up.4"], 
-				hitbox: :default, 
+				"walk.up.1" => {},
+				"walk.up.2" => {},
+				"walk.up.3" => {},
+				"walk.up.4" => {},
 			},
 			walk_right: 
 			{ 
-				frames: ["walk.right.1","walk.right.2","walk.right.3","walk.right.4"],
-				hitbox: :default, 
+				"walk.right.1" => {},
+				"walk.right.2" => {},
+				"walk.right.3" => {},
+				"walk.right.4" => {},
 			},
 			walk_left: 
 			{ 
-				frames: ["walk.left.1","walk.left.2","walk.left.3","walk.left.4"], 
-				hitbox: :default, 
+				"walk.left.1" => {},
+				"walk.left.2" => {},
+				"walk.left.3" => {},
+				"walk.left.4" => {},
 			},
 			walk_down: 
 			{ 
-				frames: ["walk.down.1","walk.down.2","walk.down.3","walk.down.4"],
-				hitbox: :default, 
+				"walk.down.1" => {},
+				"walk.down.2" => {},
+				"walk.down.3" => {},
+				"walk.down.4" => {},
 			},
 		},
 		
 		hitbox:
 		{
-			default: [38,55],
+			default: {size: [38,55], offset: [0,0]},
 		}
     
   	}

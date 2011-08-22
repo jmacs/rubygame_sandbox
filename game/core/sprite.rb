@@ -40,11 +40,11 @@ module Game::Core
 
     def change_animation(name)
       @animation.change name
-      @hitbox.change_size @animation.current_hitbox
+      @hitbox.change_size @animation.current.frame_hitbox
     end
     
     def set_animation_speed(speed)
-      @animation.speed = speed
+      @animation.set_speed speed
     end
     
   end

@@ -25,10 +25,10 @@ module Game::Core
     
     def change_size(key)
       return if key.to_s == @current_size 
-      @rect.w = @sizes[key][0]
-      @rect.h = @sizes[key][1]
+      @rect.w = @sizes[key][:size][0]
+      @rect.h = @sizes[key][:size][1]
       @current_size = key.to_s
-      make_visible
+      #make_visible
     end
     
     def w

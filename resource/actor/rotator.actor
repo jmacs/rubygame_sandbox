@@ -4,25 +4,27 @@ def_actor rotator:
 	{
 		sheet: "mobs",
 		
-		size: [48,81],
-		
-		animations:
+		animation:
 		{
 			spin_left: 
 			{ 
-				frames: ["turtle.shell.side","turtle.shell.spin.1","turtle.shell.front","turtle.shell.spin.2"], 
-				hitbox: :default, 
+				"turtle.shell.side" => {},
+				"turtle.shell.spin.1" => {},
+				"turtle.shell.front" => {},
+				"turtle.shell.spin.2" => {},
 			},
 			spin_right: 
 			{ 
-				frames: ["turtle.shell.side","turtle.shell.spin.2","turtle.shell.front","turtle.shell.spin.1"],
-				hitbox: :default, 
+				"turtle.shell.side" => {},
+				"turtle.shell.spin.2" => {},
+				"turtle.shell.front" => {},
+				"turtle.shell.spin.1" => {},
 			},
 		},
 		
 		hitbox:
 		{
-			default: [32,32],
+			default: {size: [32,32], offset: [0,0]},
 		}
     
   	}

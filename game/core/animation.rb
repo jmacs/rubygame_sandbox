@@ -1,92 +1,69 @@
+require "./game/core/animation_frame_set.rb"
+
 module Game::Core
   
   class Animation
     
-    attr_accessor :speed
-    attr_reader :sprite_info
-    attr_reader :frame_index
-    attr_reader :current_animation
-    attr_reader :frame_time_counter
-    attr_reader :rect
-    attr_reader :loaded
+    attr_reader :current
     
     def load(script)
-      @sprite_info = script[:sprite]
       @frame_time_counter = 0
-      @rect = Rubygame::Rect.new 0,0,1,1
-      change sprite_info[:animations].keys[0]
-      @loaded = true
       @speed = 1 
+      @rect = Rubygame::Rect.new 0,0,1,1
+      @sets = Hash.new
+      @sheet = nil
+      @sheet_name = script[:sprite][:sheet]
+      create_frame_sets script[:sprite][:animation]
+      update_blit_area
     end
     
     def change(animation_name)
-      return if animation_name == @current_animation_name
-      @current_animation_name = animation_name
-      @frame_index = 0
+      return if @current.name == animation_name
+      @current = @sets[animation_name]
+      @current.reset
+      @frame_time_counter = 0
+      update_blit_area
+    end
+    
+    def set_speed(speed)
+      @speed = speed
     end
     
     def animate()
-      return if @current_animation_name.nil?
-      return if num_of_frames == 1
-      frame_time = current_frame_time
       @frame_time_counter += 1 * @speed
-      if @frame_time_counter >= frame_time
-        move_next_frame
+      if @frame_time_counter >= @current.frame_time
+        @current.next
         @frame_time_counter = 0
+        update_blit_area
       end
     end
     
     def blit(surface, pos)
-      surf = Game::Core::SpriteSheetManager.load sheet_name, current_frame, @rect
-      surf.blit surface, pos, @rect
+      @sheet.blit surface, pos, @rect
     end
     
     def w
-      @sprite_info[:size][0]
+      @rect.w
     end
     
     def h
-      @sprite_info[:size][1]
+      @rect.h
     end
     
-    def sheet_name
-      @sprite_info[:sheet]
-    end
+    private
     
-    def current_frame_key
-      @sprite_info[@frame_index]  
-    end
-    
-    def current_frame
-      current_animation[:frames][@frame_index]  
-    end
-    
-    def num_of_frames
-      current_animation[:frames].size
-    end
-    
-    def current_frame_time
-      return 5 if not current_animation.has_key? :time
-      current_animation[:time][@frame_index]
-    end
-    
-    def current_animation
-      @sprite_info[:animations][@current_animation_name]
-    end
-    
-    def current_hitbox
-      current_animation[:hitbox]
-    end
-    
-    def move_next_frame
-      num_of_frames = current_animation[:frames].size
-      return if num_of_frames <= 1
-      if @frame_index == num_of_frames - 1 
-        @frame_index = 0
-      else
-        @frame_index += 1
+    def create_frame_sets(animations)
+      animations.each do |name,hash|
+        set = AnimationFrameSet.new name, hash
+        @sets[set.name] = set
       end
+      @current = @sets[@sets.keys[0]]
     end
+    
+    def update_blit_area
+      @sheet = Game::Core::SpriteSheetManager.load @sheet_name, @current.frame_name, @rect
+    end
+    
   end
   
 end
